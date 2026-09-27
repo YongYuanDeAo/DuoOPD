@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+/outputs/
+/models/
+/raw/
+/nltk_data/
+.cache/
+wandb/
+.DS_Store

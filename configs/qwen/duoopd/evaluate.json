@@ -1,0 +1,21 @@
+{
+  "test_path": "data/biology-chemistry-physics/test.parquet",
+  "model": {
+    "path": "outputs/qwen/duoopd/train/global_step_60/actor/huggingface",
+    "tensor_parallel_size": 1,
+    "gpu_memory_utilization": 0.8,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    }
+  },
+  "generation": {
+    "batch_size": 8,
+    "max_new_tokens": 1024,
+    "max_prompt_tokens": 4096,
+    "n_samples": 8,
+    "temperature": 1,
+    "top_k": -1,
+    "top_p": 1
+  },
+  "seed": 42
+}

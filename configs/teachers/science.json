@@ -1,0 +1,23 @@
+{
+  "train_file": "data/materials-chemistry-physics/reference_train_verl.parquet",
+  "output": "outputs/teacher-generation/science/teacher.jsonl",
+  "teacher_max_prompt_length": 6144,
+  "seed": 42,
+  "model": {
+    "path": "models/Qwen3-4B",
+    "tensor_parallel_size": 1,
+    "gpu_memory_utilization": 0.8,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    }
+  },
+  "generation": {
+    "batch_size": 48,
+    "max_new_tokens": 1024,
+    "max_prompt_tokens": 4096,
+    "n_samples": 1,
+    "temperature": 1,
+    "top_p": 1,
+    "top_k": -1
+  }
+}

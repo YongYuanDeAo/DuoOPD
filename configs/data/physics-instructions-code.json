@@ -1,0 +1,42 @@
+{
+  "mixture": "physics-instructions-code",
+  "physics": "configs/data/biology-chemistry-physics.json",
+  "rlvr_ifeval": "raw/RLVR-IFeval/data/train-00000-of-00001.parquet",
+  "ifeval": "raw/ifeval_input_data.jsonl",
+  "mbpp": "raw/mbpp.jsonl",
+  "tokenizer": "models/Qwen3-0.6B",
+  "max_prompt_tokens": 4096,
+  "seed": 42,
+  "if_constraints": {
+    "verify_keywords": [],
+    "verify_keyword_frequency": [
+      1,
+      8
+    ],
+    "verify_bullet_points": [
+      2,
+      8
+    ],
+    "verify_paragraph_count": [
+      2,
+      8
+    ],
+    "validate_word_constraint": [
+      10,
+      150
+    ],
+    "validate_json_format": [],
+    "validate_uppercase": [],
+    "validate_lowercase": []
+  },
+  "if_development_per_constraint": 8,
+  "if_heldout_per_constraint": 25,
+  "if_train_per_constraint": 120,
+  "open_generation_pattern": "\\b(write|describe|explain|summari[sz]e|draft|create|compose|suggest|provide|tell me)\\b",
+  "choice_pattern": "\\b(options|choices)\\s*:|\\b(multiple[- ]choice|choose one|pick one|which of the following|choose from|true or false)\\b|^\\s*[A-Da-d][.)]\\s",
+  "label_pattern": "\\b(classif\\w*|categor(?:y|ies|ize|ise|ization|isation)|sentiment|entail\\w*|contradic\\w*|label(?:s|ing|ling)?)\\b|\\b(?:yes|true)\\b[\\W_]*(?:or|and)?[\\W_]*\\b(?:no|false)\\b|\\b(?:positive|negative|neutral)\\b.{0,40}\\b(?:positive|negative|neutral)\\b|★|\\bstar[- ]rating\\b|\\b(?:rate|rating)\\b.{0,100}\\breview\\b|\\b(?:select|choose|pick)\\b.{0,80}\\b(?:answer|option|choice)\\b",
+  "mbpp_verification_workers": 2,
+  "questions_per_task_per_update": 16,
+  "updates": 60,
+  "output": "outputs/data/physics-instructions-code"
+}

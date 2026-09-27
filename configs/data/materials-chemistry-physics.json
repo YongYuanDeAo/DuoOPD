@@ -1,0 +1,12 @@
+{
+  "mixture": "materials-chemistry-physics",
+  "source": "raw/SciKnowEval/data/v2/sciknoweval_test_v2.jsonl",
+  "tokenizer": "models/Qwen3-0.6B",
+  "max_prompt_tokens": 4096,
+  "seed": 42,
+  "development_per_task": 100,
+  "test_per_task": 200,
+  "questions_per_task_per_update": 16,
+  "updates": 60,
+  "output": "outputs/data/materials-chemistry-physics"
+}
