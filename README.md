@@ -9,7 +9,7 @@ One rule covers all four outcomes across tasks.
 
 ![DuoOPD method](assets/method.png)
 
-[Method implementation](src/methods/duoopd/objective.py) ·
+[Paper (arXiv:2609.33711)](https://arxiv.org/abs/2609.33711) · [Method implementation](src/methods/duoopd/objective.py) ·
 [Fixed data](data/README.md) · [Third-party sources](THIRD_PARTY.md)
 
 This repository provides DuoOPD, sampled-token OPD, the method's ablation switches,
@@ -131,6 +131,18 @@ generated `teacher.jsonl` path.
 
 The full reference prompt is defined in `reference_prompt()` in
 `src/methods/duoopd/teacher.py`.
+
+## Citation
+
+```bibtex
+@article{yu2026duoopd,
+  title   = {{DuoOPD}: Learning from Joint Teacher--Student Outcomes for Multi-Task On-Policy Distillation},
+  author  = {Yu, Ao and Gao, Weibo and Zhou, Heng and Yue, Linan and Li, Rui and Liu, Suyi and Yan, Yu and Zhang, Yizhong and Liu, Qi},
+  journal = {arXiv preprint arXiv:2609.33711},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2609.33711}
+}
+```
 
 ## Acknowledgements
 
