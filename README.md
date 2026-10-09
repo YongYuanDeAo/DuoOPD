@@ -1,5 +1,6 @@
 # DuoOPD
 [![arXiv](https://img.shields.io/badge/arXiv-2609.33711-b31b1b.svg)](https://arxiv.org/abs/2609.33711)
+[![Hugging Face Papers](https://img.shields.io/badge/🤗%20Hugging%20Face-Papers-yellow.svg)](https://huggingface.co/papers/2609.33711)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 We propose **DuoOPD**, an on-policy distillation method that learns from joint teacher-student outcomes. The student's verified outcome sets the direction of feedback, and the joint outcome decides how the teacher supports it: when only the teacher succeeds, its verified answer becomes context for scoring the student's response; when only the student succeeds, a weight shared within the task reinforces the whole response. One rule covers all four outcomes across tasks, without task-specific settings.
