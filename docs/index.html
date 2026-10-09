@@ -41,22 +41,33 @@ p { margin: 0 0 18px; }
 .figure { margin: 26px 0 8px; }
 .figure img { display: block; width: 100%; height: auto; }
 .figure figcaption { font-size: 14px; line-height: 1.65; margin-top: 16px; }
+.prose { max-width: 800px; margin-left: auto; margin-right: auto; }
+.prose p { margin-bottom: 16px; }
+.result-text { margin-top: 20px; margin-bottom: 34px; }
 .table-scroll { overflow-x: auto; margin: 24px 0 18px; }
 table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; white-space: nowrap; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
-caption { text-align: left; margin-bottom: 12px; font-size: 13px; white-space: normal; }
-th, td { padding: 10px 14px; text-align: right; }
+caption { text-align: left; margin-bottom: 12px; font-size: 14px; font-weight: 600; white-space: normal; }
+th, td { padding: 9px 10px; text-align: right; }
 th:first-child { text-align: left; }
-thead { border-bottom: 1px solid var(--ink); }
-thead th { font-size: 12px; }
+thead { border-bottom: 1px solid var(--ink); background: #f5f5f5; }
+thead th { font-size: 12px; line-height: 1.5; vertical-align: middle; }
+thead .group-title { text-align: center; font-size: 14px; padding-top: 14px; padding-bottom: 10px; }
+.group-title span { display: block; font-size: 11px; font-weight: normal; }
+thead tr:last-child th:first-child { text-align: right; }
 tbody th { font-weight: normal; }
-tbody tr:last-child { border-top: 1px solid var(--ink); font-weight: bold; }
-tbody tr:last-child th { font-weight: bold; }
+tbody .reference { font-size: 13px; }
+.baseline-start { border-top: 1px solid #ddd; }
+.ours { background: rgb(0 160 135 / 15%); border-top: 1px solid var(--ink); }
+.ours th { font-weight: bold; }
+.macro { border-left: 1px solid #ddd; }
+.runner-up { text-decoration: underline; text-underline-offset: 3px; }
 .note { font-size: 13px; }
+.table-key { margin-bottom: 26px; }
 .citation-head { position: relative; }
 .copy { display: block; margin: 0 0 10px auto; border: 1px solid #ddd; background: white; padding: 5px 10px; font: inherit; font-size: 12px; cursor: pointer; }
 .copy[hidden] { display: none; }
 pre { overflow: auto; background: #f5f5f5; padding: 20px; font: 12px/1.7 ui-monospace, SFMono-Regular, Consolas, monospace; }
-footer { padding: 25px 0 40px; text-align: center; font-size: 12px; }
+main { padding-bottom: 40px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 @media (max-width: 600px) {
   .hero { padding-top: 36px; }
@@ -86,20 +97,58 @@ footer { padding: 25px 0 40px; text-align: center; font-size: 12px; }
 </section>
 <section class="section" id="method" aria-labelledby="method-title">
 <h2 id="method-title">Method</h2>
+<div class="prose">
+<p>In on-policy distillation, the student generates an answer and the teacher scores its tokens. The teacher's preferences may still favor an incorrect response or give little support to a correct one. DuoOPD uses verified outcomes to decide whether each student response should be reinforced or suppressed.</p>
+<p>When the teacher answers correctly and the student does not, the teacher receives its own verified answer as extra context while scoring the student's response. This helps direct correction along the student's existing answer. The student never sees the reference. When only the student is correct, DuoOPD reinforces its whole response with a positive weight shared among such successes within the same task and rollout batch.</p>
+<p>When both models are correct, every student token receives positive feedback; when both are wrong, every token receives negative feedback. In these two cases, teacher preferences determine the strength of the feedback. The same four-outcome rule applies across tasks, with the teacher frozen throughout training.</p>
+</div>
 <figure class="figure"><a href="assets/method.png" aria-label="Open the full-resolution DuoOPD method figure"><img src="assets/method.png" height="2605" alt="Method overview comparing outcome-agnostic OPD with DuoOPD’s four outcome-dependent feedback rules." width="4252" loading="lazy"></a><figcaption>Student verification sets the feedback sign; joint verification selects reference-conditioned scoring, task-local weight sharing, or original-context teacher preferences. <a href="https://arxiv.org/abs/2609.33711">Full formulation in the paper</a></figcaption></figure>
 </section>
 <section class="section" id="results" aria-labelledby="results-title">
 <h2 id="results-title">Results</h2>
-<p class="intro">DuoOPD achieves the highest mean macro accuracy among the six distillation methods for both model families and both additional task mixtures.</p>
-<div class="table-scroll" role="region" aria-label="Macro accuracy comparison" tabindex="0"><table><caption>Test Macro avg@8 accuracy (%). Mean over three training runs; higher is better.</caption><thead><tr><th scope="col">Method</th><th scope="col">Qwen3<br>4B → 0.6B</th><th scope="col">Llama<br>8B → 3B</th><th scope="col">Science<br>Qwen3</th><th scope="col">Heterogeneous<br>Qwen3</th></tr></thead><tbody>
-<tr><th scope="row">OPD</th><td>64.39</td><td>67.28</td><td>62.33</td><td>47.22</td></tr>
-<tr><th scope="row">EOPD</th><td>65.81</td><td>66.49</td><td>61.56</td><td>46.90</td></tr>
-<tr><th scope="row">OPDVR</th><td>64.83</td><td>68.68</td><td>62.16</td><td>47.83</td></tr>
-<tr><th scope="row">ExOPD</th><td>64.42</td><td>66.34</td><td>62.62</td><td>46.83</td></tr>
-<tr><th scope="row">FiRe-OPD</th><td>64.58</td><td>67.64</td><td>61.72</td><td>47.53</td></tr>
-<tr><th scope="row">DuoOPD (ours)</th><td>66.97</td><td>73.26</td><td>63.48</td><td>49.24</td></tr>
-</tbody></table></div>
-<p class="note"><strong>Protocol.</strong> Evaluate the checkpoint after update 60. avg@8 is mean success across eight sampled answers per question; Macro weights the three tasks equally. Qwen3 and Llama use biology, chemistry, and physics. Llama uses 3.1-8B-Instruct → 3.2-3B-Instruct. Science combines materials knowledge, chemistry understanding, and physics calculation. Heterogeneous combines physics knowledge, instruction following (IFEval, prompt-level strict), and code generation (MBPP).</p>
+<p id="table-protocol" class="note">Test accuracy (%) is measured by avg@8: mean success across eight sampled answers per question. Trained methods are evaluated after update 60 and averaged over three training runs. Macro gives equal weight to the three tasks in each setting.</p>
+<p id="table-key" class="note table-key"><strong>Bold</strong> and <span class="runner-up">underlined</span> values mark the best and second-best distillation methods in each column. Initial students and teachers are included as references.</p>
+<div class="table-scroll" role="region" aria-labelledby="model-results-caption" tabindex="0">
+<table id="model-results" aria-describedby="table-protocol table-key">
+<caption id="model-results-caption">Table 1. Biology, chemistry, and physics across two model families.</caption>
+<colgroup><col class="method-column"></colgroup><colgroup span="4"></colgroup><colgroup span="4"></colgroup>
+<thead>
+<tr><th scope="col" rowspan="2">Method</th><th scope="colgroup" colspan="4" class="group-title">Qwen3<span>4B → 0.6B</span></th><th scope="colgroup" colspan="4" class="group-title">Llama<span>3.1-8B-Instruct → 3.2-3B-Instruct</span></th></tr>
+<tr><th scope="col">Biology</th><th scope="col">Chemistry</th><th scope="col">Physics</th><th scope="col" class="macro">Macro</th><th scope="col">Biology</th><th scope="col">Chemistry</th><th scope="col">Physics</th><th scope="col" class="macro">Macro</th></tr>
+</thead>
+<tbody>
+<tr class="reference"><th scope="row">Student (initial)</th><td>37.38</td><td>38.88</td><td>33.38</td><td class="macro">36.54</td><td>36.63</td><td>42.44</td><td>44.94</td><td class="macro">41.33</td></tr>
+<tr class="reference"><th scope="row">Teacher</th><td>79.56</td><td>81.38</td><td>76.88</td><td class="macro">79.27</td><td>73.25</td><td>75.06</td><td>69.88</td><td class="macro">72.73</td></tr>
+<tr class="baseline-start"><th scope="row">OPD</th><td>67.38</td><td>67.42</td><td>58.38</td><td class="macro">64.39</td><td>69.19</td><td>70.90</td><td>61.75</td><td class="macro">67.28</td></tr>
+<tr><th scope="row">EOPD</th><td><span class="runner-up">68.06</span></td><td><span class="runner-up">68.44</span></td><td><span class="runner-up">60.92</span></td><td class="macro"><span class="runner-up">65.81</span></td><td>68.73</td><td>69.54</td><td>61.21</td><td class="macro">66.49</td></tr>
+<tr><th scope="row">OPDVR</th><td>66.92</td><td>66.69</td><td>60.90</td><td class="macro">64.83</td><td><span class="runner-up">69.75</span></td><td><span class="runner-up">72.40</span></td><td><span class="runner-up">63.90</span></td><td class="macro"><span class="runner-up">68.68</span></td></tr>
+<tr><th scope="row">ExOPD</th><td>67.54</td><td>66.79</td><td>58.94</td><td class="macro">64.42</td><td>68.33</td><td>69.88</td><td>60.81</td><td class="macro">66.34</td></tr>
+<tr><th scope="row">FiRe-OPD</th><td>67.00</td><td>67.23</td><td>59.50</td><td class="macro">64.58</td><td>69.50</td><td>71.81</td><td>61.60</td><td class="macro">67.64</td></tr>
+<tr class="ours"><th scope="row">DuoOPD (ours)</th><td><strong>68.60</strong></td><td><strong>70.19</strong></td><td><strong>62.10</strong></td><td class="macro"><strong>66.97</strong></td><td><strong>74.42</strong></td><td><strong>76.33</strong></td><td><strong>69.02</strong></td><td class="macro"><strong>73.26</strong></td></tr>
+</tbody></table>
+</div>
+<p class="prose result-text">DuoOPD improves over OPD in biology, chemistry, and physics for both model families. The largest gains are in physics: 3.73 percentage points for Qwen3 and 7.27 for Llama. Averaged across the three tasks, the gains are 2.58 and 5.98 points, respectively.</p>
+<div class="table-scroll" role="region" aria-labelledby="task-results-caption" tabindex="0">
+<table id="task-results" aria-describedby="table-protocol table-key">
+<caption id="task-results-caption">Table 2. Additional task mixtures, each trained with Qwen3-4B → Qwen3-0.6B.</caption>
+<colgroup><col class="method-column"></colgroup><colgroup span="4"></colgroup><colgroup span="4"></colgroup>
+<thead>
+<tr><th scope="col" rowspan="2">Method</th><th scope="colgroup" colspan="4" class="group-title">Science<span>Knowledge, understanding, calculation</span></th><th scope="colgroup" colspan="4" class="group-title">Heterogeneous<span>Answers, instructions, code</span></th></tr>
+<tr><th scope="col">Materials<br>knowledge</th><th scope="col">Chemistry<br>understanding</th><th scope="col">Physics<br>calculation</th><th scope="col" class="macro">Macro</th><th scope="col">Physics<br>knowledge</th><th scope="col">IFEval</th><th scope="col">MBPP</th><th scope="col" class="macro">Macro</th></tr>
+</thead>
+<tbody>
+<tr class="reference"><th scope="row">Student (initial)</th><td>32.63</td><td>56.44</td><td>24.38</td><td class="macro">37.81</td><td>32.25</td><td>54.99</td><td>20.69</td><td class="macro">35.98</td></tr>
+<tr class="reference"><th scope="row">Teacher</th><td>67.44</td><td>96.94</td><td>56.00</td><td class="macro">73.46</td><td>77.25</td><td>78.70</td><td>57.69</td><td class="macro">71.21</td></tr>
+<tr class="baseline-start"><th scope="row">OPD</th><td><strong>55.50</strong></td><td>91.71</td><td>39.77</td><td class="macro">62.33</td><td>59.29</td><td>50.95</td><td>31.41</td><td class="macro">47.22</td></tr>
+<tr><th scope="row">EOPD</th><td><span class="runner-up">55.00</span></td><td>92.75</td><td>36.94</td><td class="macro">61.56</td><td>59.56</td><td>50.25</td><td>30.88</td><td class="macro">46.90</td></tr>
+<tr><th scope="row">OPDVR</th><td>53.98</td><td><span class="runner-up">92.83</span></td><td>39.67</td><td class="macro">62.16</td><td>59.35</td><td>52.31</td><td><span class="runner-up">31.83</span></td><td class="macro"><span class="runner-up">47.83</span></td></tr>
+<tr><th scope="row">ExOPD</th><td>54.56</td><td><strong>93.21</strong></td><td><span class="runner-up">40.08</span></td><td class="macro"><span class="runner-up">62.62</span></td><td><span class="runner-up">59.81</span></td><td>49.72</td><td>30.95</td><td class="macro">46.83</td></tr>
+<tr><th scope="row">FiRe-OPD</th><td>54.67</td><td>92.17</td><td>38.31</td><td class="macro">61.72</td><td>58.96</td><td><span class="runner-up">52.89</span></td><td>30.74</td><td class="macro">47.53</td></tr>
+<tr class="ours"><th scope="row">DuoOPD (ours)</th><td>54.65</td><td>92.46</td><td><strong>43.33</strong></td><td class="macro"><strong>63.48</strong></td><td><strong>61.75</strong></td><td><strong>53.30</strong></td><td><strong>32.69</strong></td><td class="macro"><strong>49.24</strong></td></tr>
+</tbody></table>
+</div>
+<p class="prose result-text">DuoOPD also leads the five baselines in mean Macro on two additional task mixtures. The science mixture combines factual knowledge, understanding, and numerical calculation; the heterogeneous mixture combines physics answers, instruction following, and executable code. It leads the baselines on physics calculation in the science mixture and on all three tasks in the heterogeneous mixture.</p>
+<p class="note">IFEval uses prompt-level strict accuracy: a response must satisfy every instruction constraint. MBPP evaluates generated code. Values follow Tables 1 and 2 of the <a href="https://arxiv.org/abs/2609.33711">paper</a>.</p>
 <figure class="figure"><a href="assets/outcomes.png" aria-label="Open the full-resolution teacher–student outcome comparison"><img src="assets/outcomes.png" height="1889" alt="Outcome comparison for Qwen3 and Llama: DuoOPD increases student successes over OPD in biology, chemistry, and physics, on questions the fixed teacher both solves and fails." loading="lazy" width="3300"></a><figcaption>On the same test questions with fixed teacher responses, DuoOPD improves over OPD both where the teacher succeeds and where it fails, in every domain for both families. Trained bars average three runs.</figcaption></figure>
 </section>
 <section class="section" id="citation" aria-labelledby="citation-title"><div class="citation-head"><h2 id="citation-title">BibTeX</h2><button class="copy" id="copy" hidden>Copy BibTeX</button></div><pre><code id="bibtex">@article{yu2026duoopd,
@@ -112,7 +161,6 @@ footer { padding: 25px 0 40px; text-align: center; font-size: 12px; }
   year={2026}
 }</code></pre><p id="copy-status" class="sr-only" role="status"></p></section>
 </main>
-<footer class="wrap"><a href="https://github.com/YongYuanDeAo/DuoOPD">DuoOPD code and data</a></footer>
 <script>
 const copy = document.querySelector('#copy');
 if (navigator.clipboard && window.isSecureContext) {
